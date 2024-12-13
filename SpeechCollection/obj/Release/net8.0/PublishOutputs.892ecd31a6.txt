@@ -1,0 +1,15 @@
+/home/xen/xendev/speech-collector/speech collection/bin/Release/net8.0/publish/speech collection
+/home/xen/xendev/speech-collector/speech collection/bin/Release/net8.0/publish/appsettings.Development.json
+/home/xen/xendev/speech-collector/speech collection/bin/Release/net8.0/publish/appsettings.json
+/home/xen/xendev/speech-collector/speech collection/bin/Release/net8.0/publish/speech collection.dll
+/home/xen/xendev/speech-collector/speech collection/bin/Release/net8.0/publish/speech collection.deps.json
+/home/xen/xendev/speech-collector/speech collection/bin/Release/net8.0/publish/speech collection.runtimeconfig.json
+/home/xen/xendev/speech-collector/speech collection/bin/Release/net8.0/publish/speech collection.pdb
+/home/xen/xendev/speech-collector/speech collection/bin/Release/net8.0/publish/Castle.Core.dll
+/home/xen/xendev/speech-collector/speech collection/bin/Release/net8.0/publish/Moq.dll
+/home/xen/xendev/speech-collector/speech collection/bin/Release/net8.0/publish/Newtonsoft.Json.dll
+/home/xen/xendev/speech-collector/speech collection/bin/Release/net8.0/publish/NuGet.Frameworks.dll
+/home/xen/xendev/speech-collector/speech collection/bin/Release/net8.0/publish/xunit.abstractions.dll
+/home/xen/xendev/speech-collector/speech collection/bin/Release/net8.0/publish/xunit.assert.dll
+/home/xen/xendev/speech-collector/speech collection/bin/Release/net8.0/publish/xunit.core.dll
+/home/xen/xendev/speech-collector/speech collection/bin/Release/net8.0/publish/xunit.execution.dotnet.dll

@@ -1,0 +1,15 @@
+.submit_button {
+	background-color: #d59e9e;
+	width: 50px;
+	border-radius: 20px;
+}
+
+.submit_button:hover {
+	background-color: #dab4b4;
+}
+
+.submit_button:active {
+	background-color: #996a6a;
+}
+
+

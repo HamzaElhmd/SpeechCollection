@@ -1,0 +1,407 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+    body {
+        background: linear-gradient(135deg, #1f1f2e, #3c3c61);
+        color: #ffffff;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    h1, h2 {
+        color: #e0e0e0;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+    }
+
+    .container {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+    }
+
+    .border {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        padding: 20px;
+    }
+
+    button {
+        background: linear-gradient(135deg, #4a90e2, #007aff);
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        font-size: 1rem;
+        font-weight: bold;
+        transition: transform 0.2s, background 0.2s;
+    }
+
+    button:hover {
+        transform: scale(1.05);
+        background: linear-gradient(135deg, #3a7bcc, #005fae);
+    }
+
+    input[type="file"] {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    #waveform-container {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    #progress {
+        font-weight: bold;
+        font-size: 1.2rem;
+        color: #16e071;
+    }
+
+    #error-message {
+        color: #ff4d4d;
+    }
+
+    #success-message {
+        color: #28a745;
+    }
+</style>
+
+<h1 class="display-4 text-center">Speech Data Submission</h1>
+
+<br>
+
+<h2 class="h4 mb-4 text-center">Sample Scripts</h2>
+<div id="sample-scripts" class="border">
+    <ul>
+        <li><b><span>3afak wach had triq katwesel l9hwa?</span></b></li>
+        <li><b><span>Mchit had sba7 lbanka o khrejt lflos.</span></b></li>
+    </ul>
+</div>
+
+<div class="container mt-4">
+    <section id="audio-recording" class="mb-5">
+        <h2 class="h4 mb-4 text-center">Record Audio</h2>
+        <div id="recorder-container" class="border">
+            <div id="waveform-container" class="mb-3">
+                <div id="waveform" style="height: 130px;"></div>
+            </div>
+
+            <div>
+                <button class="btn" id="pause" disabled style="display:none;">Pause</button>
+                <button class="btn" id="record">Record</button>
+            </div>
+
+            <div>
+                <span id="progress"></span>
+            </div>
+
+            <div>
+                <label for="scrollingWaveform">Scrolling Waveform</label>
+                <input type="checkbox" id="scrollingWaveform" />
+
+                <label for="continuousWaveform">Continuous Waveform</label>
+                <input type="checkbox" id="continuousWaveform" />
+            </div>
+
+            <br>
+
+            <div id="recordingsContainer" class="border">
+                <div id="recordings"></div>
+            </div>
+        </div>
+    </section>
+
+    @if (!string.IsNullOrEmpty(Model?.errorMessage))
+    {
+        <div id="error-message" class="text-center mt-3">
+            @Model.errorMessage
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(Model?.successMessage))
+    {
+        <div id="success-message" class="text-center mt-3">
+            @Model.successMessage
+        </div>
+    }
+
+    <section id="audio-upload">
+        <h2 class="h4 text-center">Upload Audio</h2>
+        <form asp-controller="SpeechDataCollection" asp-action="UploadFile" enctype="multipart/form-data" method="post">
+            <input type="file" name="audioFile" accept="audio/*" class="form-control mb-3" id="file-input" />
+            <button type="submit" class="btn" id="upload-btn">Upload</button>
+        </form>
+    </section>
+</div>
+
+<script type="module">
+import WaveSurfer from 'https://cdn.jsdelivr.net/npm/wavesurfer.js@7/dist/wavesurfer.esm.js'
+import RecordPlugin from 'https://cdn.jsdelivr.net/npm/wavesurfer.js@7.8.9/dist/plugins/record.esm.js'
+
+    const recordBtn = document.getElementById("record-btn");
+    const confirmBtn = document.getElementById("confirm-btn");
+    const removeBtn = document.getElementById("remove-btn");
+    const playbackBtn = document.getElementById("playback-btn");
+
+    let wavesurfer, record;
+    let scrollingWaveform = false;
+    let continuousWaveform = true;
+    let chunks = [];
+    let audioURL = "";
+    let audio = new Audio();
+    let mediaRecorder = null;
+    let audioBlob = null;
+
+    const createWaveSurfer = () => {
+    	if (wavesurfer) {
+		wavesurfer.destroy()
+	}
+
+	wavesurfer = WaveSurfer.create({
+		container: '#waveform',
+		waveColor: '#3390f7',
+		progressColor: '#265d98',
+	});
+
+	record = wavesurfer.registerPlugin(
+		RecordPlugin.create({
+			renderRecordedAudio: false,
+			scrollingWaveform,
+			continuousWaveform,
+			continuousWaveformDuration: 20,
+		})
+	);
+
+	record.on('record-end', (blob) => {
+		const container = document.querySelector('#recordingsContainer');
+		const recordedUrl = URL.createObjectURL(blob);
+		const wavesurfer = WaveSurfer.create({
+			container,
+			waveColor: '#16e071',
+			progressColor: '#11b059',
+			url: recordedUrl,
+		});
+
+		const button = container.appendChild(document.createElement('button'));
+		button.textContent = 'Play';
+		button.className = 'btn btn-primary mb-3';
+		button.onclick = () => wavesurfer.playPause();
+		wavesurfer.on("pause", () => (button.textContent = 'Play'));
+		wavesurfer.on("play", () => (button.textContenr = 'Pause'));
+
+		const removebtn = container.appendChild(document.createElement('remove'));
+		removebtn.className = 'btn btn-danger mb-3';
+		removebtn.onclick = () => {
+			wavesurfer.destroy();
+			button.style.display = 'none';
+			removebtn.style.display = 'none';
+			confirm_.style.display = 'none';
+			progress.style.display = 'none';
+		}
+		removebtn.textContent = 'Remove'
+
+		const confirm_ = container.appendChild(document.createElement('a'));
+		Object.assign(confirm_, {
+			href: "#",
+			textContent: 'Upload recording',
+		});
+
+		let formData
+
+		confirm_.addEventListener("click", function () {
+			if (blob == null)
+	    		{
+		    		console.log("Audio blob is null.");
+	    		} else {
+		    		console.log("audioBlob is valid.");
+		    		formData = new FormData();
+		    		formData.append('audio', blob, 'audio.wav');
+
+		    		fetch("/SpeechDataCollection/Record", {
+			    		method: "POST",
+            			    	body: formData
+		    		})	
+			    	.then(response => response.json())
+			    	.then(data => {
+				    	if (data.messageLog) console.log(data.messageLog);
+			    	})
+			    	.catch(err => console.error("Error:", err));
+	    			wavesurfer.destroy();
+				removebtn.style.display = "none";
+				confirm_.style.display = 'none';
+				button.style.display = 'none';
+				progress.style.display = 'none';
+			}
+   		 });
+
+		pauseButton.style.display = 'none'
+  		recButton.textContent = 'Record'
+	});
+
+		record.on('record-progress', (time) => {
+			progress.style.display = 'block';
+			updateProgress(time);
+                });
+    }
+
+    const progress = document.querySelector('#progress');
+    const updateProgress = (time) => {
+	const formattedTime = [Math.floor((time % 3600000) / 60000),
+	Math.floor((time % 60000) / 1000),
+	].map((v) => (v < 10 ? '0' + v : v))
+	.join(':')
+	progress.textContent = formattedTime;
+    }
+
+    const pauseButton = document.querySelector('#pause')
+    pauseButton.onclick = () => {
+  	if (record.isPaused()) {
+    		record.resumeRecording()
+    		pauseButton.textContent = 'Pause'
+    		return
+        }
+
+  	record.pauseRecording()
+  	pauseButton.textContent = 'Resume'
+     }
+
+     const recButton = document.querySelector('#record');
+     recButton.onclick = () => {
+  	if (record.isRecording() || record.isPaused()) {
+    		record.stopRecording()
+    		recButton.textContent = 'Record'
+    		pauseButton.style.display = 'block'
+		pauseButton.textContent = 'Pause';
+		wavesurfer.empty();
+    		return
+  	}
+
+	recButton.disabled = true
+
+  	record.startRecording().then(() => {
+    		recButton.textContent = 'Stop'
+    		recButton.disabled = false
+    		pauseButton.style.display = 'inline'
+		pauseButton.disabled = false;
+  	})
+      }
+
+      document.querySelector('#scrollingWaveform').onclick = (e) => {
+  scrollingWaveform = e.target.checked
+  if (continuousWaveform && scrollingWaveform) {
+    continuousWaveform = false
+    document.querySelector('#continuousWaveform').checked = false
+  }
+  createWaveSurfer()
+}
+
+document.querySelector('#continuousWaveform').onclick = (e) => {
+  continuousWaveform = e.target.checked
+  if (continuousWaveform && scrollingWaveform) {
+    scrollingWaveform = false
+    document.querySelector('#scrollingWaveform').checked = false
+  }
+  createWaveSurfer()
+}
+
+createWaveSurfer()
+
+/*
+    // Enumerate audio input devices
+    navigator.mediaDevices.enumerateDevices()
+        .then((devices) => {
+            const audioInputs = devices.filter((device) => device.kind === "audioinput");
+            if (audioInputs.length === 0) {
+                console.error("No audio input devices found.");
+            } else {
+                console.log("Audio input devices:", audioInputs);
+            }
+        })
+        .catch((err) => console.error("Error enumerating devices:", err));
+
+    // Start recording
+    recordBtn.addEventListener("mousedown", function () {
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then((stream) => {
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.start();
+ 
+		console.log("Recorder started");
+
+                mediaRecorder.ondataavailable = (e) => {
+                    chunks.push(e.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    audioBlob = new Blob(chunks, { type: "audio/wav" });
+                    audioURL = URL.createObjectURL(audioBlob);
+
+                    audio.src = audioURL;
+                    playbackBtn.disabled = false;
+                    confirmBtn.disabled = false;
+                    removeBtn.disabled = false;
+                    chunks = [];
+                };
+            })
+            .catch((err) => console.error("Error accessing microphone:", err));
+    });
+
+    // Stop recording
+    recordBtn.addEventListener("mouseup", function () {
+        if (mediaRecorder && mediaRecorder.state === "recording") {
+            mediaRecorder.stop();
+            console.log("Recording stopped.");
+        } else {
+            console.error("MediaRecorder is not initialized or not recording.");
+        }
+    });
+
+    // Confirm and upload the recording
+    confirmBtn.addEventListener("click", function () {
+	if (audioBlob == null)
+	    {
+		    console.log("Audio blob is null."); 
+	    } else {
+		    console.log("audioBlob is valid.");
+		    formData = new FormData();
+		    formData.append('audio', audioBlob, 'audio.wav');
+
+		    fetch("/SpeechDataCollection/Record", {
+			    method: "POST",
+            		    body: formData
+		    })
+			    .then(response => response.json())
+			    .then(data => {
+				    if (data.messageLog) console.log(data.messageLog);
+			    })
+			    .catch(err => console.error("Error:", err));
+		    confirmBtn.disabled = true;
+		    removeBtn.disabled = true;
+		    playbackBtn.disabled = true;
+		    chunks = [];
+	    }
+    });
+
+    // Remove the recording
+    removeBtn.addEventListener("click", function () {
+        audio.src = "";
+        confirmBtn.disabled = true;
+        playbackBtn.disabled = true;
+        removeBtn.disabled = true;
+        console.log("Recording removed.");
+    });
+
+    // Play the recording
+    playbackBtn.addEventListener("click", function () {
+        if (audioURL) {
+            audio.play().catch(err => console.error("Playback error:", err));
+        } else {
+            console.error("No audio available to play.");
+        }
+    });
+    */
+</script>

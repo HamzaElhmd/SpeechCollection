@@ -1,0 +1,35 @@
+@{
+    ViewData["Title"] = "Authentification";
+}
+
+<head>
+	<link rel="stylesheet" href="~/css/authentification.css"/>
+</head>
+
+<div class="text-center">
+    <p class="text-center">Enter the consent code shared with your Email</p>
+
+    <input id="consent-code" type="text" name="consent_code" class="text_entry">
+    <input id="code-submit" type="button" name="consent_button" class="submit_button" value="Go">
+</div>
+
+<script defer>
+       	document.getElementById("code-submit").addEventListener("click", function() {
+               	const textValue = document.getElementById("consent-code").text;
+
+               	fetch('/Authentification/ConsentCode', {
+                       	method: "POST",
+                       	headers: {"Content-Type": "application/json"},
+                       	body: JSON.stringify({ value: textValue })
+               	})
+               	.then(response => response.json())
+               	.then(data => {
+                       	if (data.exists) {
+                               	alert("Value found in database !")
+                       	} else {
+                               	alert("Value not found in database")
+                       	}
+               	})
+               	.catch(error => console.log("Error: ", error))
+       	});
+</script>

@@ -1,0 +1,244 @@
+@{
+    ViewData["Title"] = "Consent Form";
+}
+
+<style>
+    body {
+        background: linear-gradient(135deg, #2b2d42, #8d99ae);
+        color: #edf2f4;
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        text-align: center;
+	overflow: auto; 
+    }
+
+    html {
+    	height: 100%;
+    	overflow: hidden; /* Prevent horizontal scrolling */
+    }
+
+    .container {
+        max-width: 600px;
+        background: #fff;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        padding: 30px;
+        border-radius: 15px;
+    }
+
+    h2 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #333;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    h4 {
+        font-size: 1.2rem;
+        color: #333;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        font-weight: 500;
+    }
+
+    p {
+        font-size: 1rem;
+        color: #555;
+        line-height: 1.5;
+    }
+
+    .btn-primary {
+        background: linear-gradient(to right, #56ccf2, #2f80ed);
+        border: none;
+        padding: 12px 30px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(to right, #2f80ed, #56ccf2);
+        transform: translateY(-3px);
+    }
+
+    .form-control, .form-select {
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        padding: 12px;
+        font-size: 1rem;
+    }
+
+    .form-check-input {
+        margin-right: 10px;
+    }
+
+    .form-check-label {
+        font-size: 1rem;
+        color: #333;
+    }
+
+    .form-check-input:checked {
+        background-color: #56ccf2;
+        border-color: #56ccf2;
+    }
+
+    .mb-3 {
+        margin-bottom: 20px;
+    }
+
+    #error-message {
+        color: red;
+        margin-top: 15px;
+        font-size: 1rem;
+        display: none;
+    }
+
+    .form-check {
+        font-size: 1.1rem;
+        color: #333;
+    }
+
+    .text-danger {
+        font-size: 1.1rem;
+        color: #d90429;
+    }
+
+    label {
+	 color: #555;
+    }
+</style>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Consent Form</h2>
+
+    <div>
+        <h4>Project Overview</h4>
+        <p>
+            Thank you for considering participation in this project. The purpose of the "Darija Pronunciation Assistant" project is to improve the pronunciation detection capabilities of Darija (Moroccan Arabic) speech recognition systems for non-native speakers. By contributing your voice data, you help create a valuable resource that supports research and technology development in automatic speech recognition (ASR) and language learning.
+        </p>
+
+        <h4>Your Contribution</h4>
+        <p>
+            By agreeing to participate, you will provide audio data of spoken Darija, which may be recorded through this website or uploaded as pre-recorded audio files.
+        </p>
+
+        <h4 style="color:#c52a2a;">Consent Statement</h4>
+        <b><p>By checking the box below, you confirm that you have read and understood the purpose of this project, the ways in which your data will be used, and your rights regarding data contribution. You agree to contribute audio data for this research, understanding that you may withdraw your consent at any time.</p></b>
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="email">Email address</label>
+        <input type="email" class="form-control" id="email" name="EmailAddress" placeholder="Enter your email" required>
+    </div>
+    
+    <div class="form-group mb-3">
+        <label for="howFound">How did you find out about the project?</label>
+        <select class="form-control" id="howFound" name="HowFound" required>
+            <option value="" disabled selected>See options</option>
+            <option value="email">Email</option>
+            <option value="friend">Friend</option>
+            <option value="website">Website</option>
+            <option value="other">Other</option>
+        </select>
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="gender">Gender</label>
+        <select class="form-control" id="gender" name="Gender" required>
+            <option value="" disabled selected>See options</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Prefer not to say</option>
+        </select>
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Are you a native Darija speaker?</label>
+        
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="isNative" id="Native" />
+            <label class="form-check-label" for="Native">Native</label>
+        </div>
+
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="isNative" id="nonNative" />
+            <label class="form-check-label" for="nonNative">Non-Native</label>
+        </div>
+    </div>
+
+    <div class="form-check mb-3">
+        <input type="checkbox" class="form-check-input" id="terms" required>
+        <label class="form-check-label" for="terms">I consent and agree to participate</label>
+    </div>
+    
+    <button type="submit" class="btn btn-primary btn-block" id="submit-button">Submit</button>
+
+    <div class="form-check mb-3" id="error-message" style="text-align:center; display: none;"></div>
+</div>
+
+<script>
+    const checkbox = document.getElementById("terms");
+    const submitButton = document.getElementById("submit-button");
+    const genderSelect = document.getElementById("gender");
+    const isNativeRadio = document.querySelectorAll('input[name="isNative"]');
+
+    let selectedGender = null;
+    let isNative = null;
+
+    submitButton.disabled = !this.checked;
+
+    checkbox.addEventListener("change", function (){
+        submitButton.disabled = !this.checked;
+    });
+
+    document.getElementById("submit-button").addEventListener("click", function() {
+        const authdaemon_addr = "/ConsentForm/Authenticate";
+        const emailaddr = document.getElementById("email").value;
+
+	console.log("Submit clicked.");
+        fetch(authdaemon_addr, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ emailAddress: emailaddr, gender: selectedGender, native: isNative })
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then((errorData) => {
+                    throw new Error(errorData || "An error occurred");
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            const errorMessageDiv = document.getElementById("error-message");
+            errorMessageDiv.style.display = "none";
+
+            if (data.redirectUrl) {
+                window.location.href = data.redirectUrl;
+            }
+        })
+        .catch(err => {
+            const errorMessageDiv = document.getElementById("error-message");
+            errorMessageDiv.textContent = err.message;
+            errorMessageDiv.style.display = "block";
+        });
+    });
+
+    genderSelect.addEventListener('change', function() {
+        selectedGender = this.value;
+    });
+
+    isNativeRadio.forEach((radio) => {
+        radio.addEventListener("change", function() {
+            isNative = this.id;
+        });
+    });
+</script>

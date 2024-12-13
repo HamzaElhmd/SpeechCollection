@@ -1,0 +1,30 @@
+/home/xen/xendev/speech-collector/speech collection/bin/Debug/net8.0/appsettings.Development.json
+/home/xen/xendev/speech-collector/speech collection/bin/Debug/net8.0/appsettings.json
+/home/xen/xendev/speech-collector/speech collection/bin/Debug/net8.0/speech collection.staticwebassets.runtime.json
+/home/xen/xendev/speech-collector/speech collection/bin/Debug/net8.0/speech collection
+/home/xen/xendev/speech-collector/speech collection/bin/Debug/net8.0/speech collection.deps.json
+/home/xen/xendev/speech-collector/speech collection/bin/Debug/net8.0/speech collection.runtimeconfig.json
+/home/xen/xendev/speech-collector/speech collection/bin/Debug/net8.0/speech collection.dll
+/home/xen/xendev/speech-collector/speech collection/bin/Debug/net8.0/speech collection.pdb
+/home/xen/xendev/speech-collector/speech collection/obj/Debug/net8.0/speech collection.GeneratedMSBuildEditorConfig.editorconfig
+/home/xen/xendev/speech-collector/speech collection/obj/Debug/net8.0/speech collection.AssemblyInfoInputs.cache
+/home/xen/xendev/speech-collector/speech collection/obj/Debug/net8.0/speech collection.AssemblyInfo.cs
+/home/xen/xendev/speech-collector/speech collection/obj/Debug/net8.0/speech collection.csproj.CoreCompileInputs.cache
+/home/xen/xendev/speech-collector/speech collection/obj/Debug/net8.0/speech collection.MvcApplicationPartsAssemblyInfo.cache
+/home/xen/xendev/speech-collector/speech collection/obj/Debug/net8.0/speech collection.RazorAssemblyInfo.cache
+/home/xen/xendev/speech-collector/speech collection/obj/Debug/net8.0/speech collection.RazorAssemblyInfo.cs
+/home/xen/xendev/speech-collector/speech collection/obj/Debug/net8.0/staticwebassets.build.json
+/home/xen/xendev/speech-collector/speech collection/obj/Debug/net8.0/staticwebassets.development.json
+/home/xen/xendev/speech-collector/speech collection/obj/Debug/net8.0/staticwebassets/msbuild.speech collection.Microsoft.AspNetCore.StaticWebAssets.props
+/home/xen/xendev/speech-collector/speech collection/obj/Debug/net8.0/staticwebassets/msbuild.build.speech collection.props
+/home/xen/xendev/speech-collector/speech collection/obj/Debug/net8.0/staticwebassets/msbuild.buildMultiTargeting.speech collection.props
+/home/xen/xendev/speech-collector/speech collection/obj/Debug/net8.0/staticwebassets/msbuild.buildTransitive.speech collection.props
+/home/xen/xendev/speech-collector/speech collection/obj/Debug/net8.0/staticwebassets.pack.json
+/home/xen/xendev/speech-collector/speech collection/obj/Debug/net8.0/scopedcss/Views/Shared/_Layout.cshtml.rz.scp.css
+/home/xen/xendev/speech-collector/speech collection/obj/Debug/net8.0/scopedcss/bundle/speech collection.styles.css
+/home/xen/xendev/speech-collector/speech collection/obj/Debug/net8.0/scopedcss/projectbundle/speech collection.bundle.scp.css
+/home/xen/xendev/speech-collector/speech collection/obj/Debug/net8.0/speech collection.dll
+/home/xen/xendev/speech-collector/speech collection/obj/Debug/net8.0/refint/speech collection.dll
+/home/xen/xendev/speech-collector/speech collection/obj/Debug/net8.0/speech collection.pdb
+/home/xen/xendev/speech-collector/speech collection/obj/Debug/net8.0/speech collection.genruntimeconfig.cache
+/home/xen/xendev/speech-collector/speech collection/obj/Debug/net8.0/ref/speech collection.dll
